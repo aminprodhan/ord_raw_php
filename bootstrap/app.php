@@ -2,13 +2,13 @@
     class ApplicationBootstrap {
         private static $instance;
         private function __construct(){
-            $this->defineConstants();
+            //$this->defineConstants();
             $this->includeClasses();
         }
-        private function defineConstants(){
-            if(defined('ABSPATH')) return;
-            define('ABSPATH', __DIR__.'/..//');
-        }
+        // private function defineConstants(){
+        //     if(defined('ABSPATH')) return;
+        //     define('ABSPATH', __DIR__.'/..//');
+        // }
         private function includeClasses(){
             LoadEnv::load(ABSPATH.'.env');
             require_once ABSPATH.'routes/web.php';            

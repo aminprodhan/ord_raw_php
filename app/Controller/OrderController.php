@@ -1,7 +1,7 @@
 <?php 
 namespace Amin\Arraytics\Controller;
-class OrderController{
+class OrderController extends BaseController{
     public function index(){
-        echo "order";
+        $this->loadView('order/create');
     }
 }

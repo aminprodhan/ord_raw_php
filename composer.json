@@ -2,7 +2,8 @@
     "name": "amin/arraytics",
     "autoload": {
         "files": [
-            "config/cors.php"
+            "config/cors.php",
+            "config/helper.php"
         ],
         "classmap": [
             "includes"
