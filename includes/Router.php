@@ -1,4 +1,4 @@
-<?php 
+<?php
     class Router{
         private $routes = [];private $current_route='';
         public function post($route, $callback){

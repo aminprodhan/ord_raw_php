@@ -1,15 +1,22 @@
-<?php 
+<?php
     class Request{
         public $inputs=[];public $errors=[];
         public $current_url=null;
         public function __construct($url=null, $method=null){
             $postdata =null;
+            $contentType = $_SERVER["CONTENT_TYPE"] ?? '';
             if($method == 'POST'){
-                $postdata = file_get_contents("php://input");
-                $this->inputs = $postdata ? json_decode($postdata) : null;
+                if(!empty($contentType) && strpos($contentType, 'application/json') !== false) {
+                    $postdata = file_get_contents("php://input");
+                    $this->inputs = !empty($postdata) ? json_decode($postdata) : null;
+                }
+                else{
+                    $this->inputs = (object)$_POST;
+                }
+               
             }
             else if($method == 'GET')
-                {
+            {
                     $request_info=[];
                     foreach($_GET as $key => $value){
                         $request_info[$key]=$value;
@@ -35,15 +42,45 @@
                     if($rule == 'required' && empty($this->inputs->$field)){
                         $this->errors[] = $field . ' is required';
                     }
-                    else if($rule == 'number'){
+                    if($rule == 'array' && !is_array($this->inputs->$field)){
+                        $this->errors[] = $field . ' must be an array';
+                    }
+                    if($rule == 'number'){
                         if(!is_numeric($this->inputs->$field)){
                             $this->errors[] = $field . ' must be numeric';
                         }
                     }
-                    else if($rule == 'email' && !empty($this->inputs->$field) && !filter_var($this->inputs->$field, FILTER_VALIDATE_EMAIL)){
+                    if(!empty($this->inputs->$field) &&  str_starts_with($rule, 'max:')){
+                        $length = str_replace('max:', '', $rule);
+                        if(strlen($this->inputs->$field) > $length){                
+                            $this->errors[] = $field . ' must be less than ' . $length . ' characters';
+                        }
+                    }
+                    if(!empty($this->inputs->$field) &&  str_starts_with($rule, 'min:')){
+                        $length = str_replace('min:', '', $rule);
+                        if(strlen($this->inputs->$field) < $length){                
+                            $this->errors[] = $field . ' must be greater than ' . $length . ' characters';
+                        }
+                    }
+                    if(!empty($this->inputs->$field) &&  str_starts_with($rule, 'equal:')){
+                        $length = str_replace('equal:', '', $rule);
+                        if(strlen($this->inputs->$field) != $length){                
+                            $this->errors[] = $field . ' must be equal to ' . $length . ' characters';
+                        }
+                    }
+                    if($rule == 'alpha_num' && !empty($this->inputs->$field) && !$this->isValidAlphaNumeric($this->inputs->$field)){
+                        $this->errors[] = $field . ' must be alpha numeric';
+                    }
+                    if($rule == 'alpha' && !empty($this->inputs->$field) && !$this->isValidStringWithSpaces($this->inputs->$field)){
+                        $this->errors[] = $field . ' must be alpha';
+                    }
+                    if($rule == 'text_only' && !empty($this->inputs->$field) && !$this->isValidTextOnly($this->inputs->$field)){
+                        $this->errors[] = $field . ' must be text only';
+                    }
+                    if($rule == 'email' && !empty($this->inputs->$field) && !filter_var($this->inputs->$field, FILTER_VALIDATE_EMAIL)){
                         $this->errors[] = $this->$field . ' is not valid email';
                     }
-                    else if( !empty($this->inputs->$field) &&  str_starts_with($rule, 'unique:')){
+                    if( !empty($this->inputs->$field) &&  str_starts_with($rule, 'unique:')){
                         [$table, $column] = explode(',', $rule);
                         $table = str_replace('unique:', '', $table);
                         if (!$this->validateUnique($table, $column, $this->inputs->$field)) {
@@ -57,13 +94,22 @@
             }
             return true;
         }
-        // private function validateUnique($table, $column, $value) {
-        //     $db=new DBQuery();
-        //     $isExist =$db->setTable($table)->where($column, $value)->first();
-        //     if(!empty($isExist->id)){
-        //         return false;
-        //     }
-        //     return true;
-        // }
+        private function isValidAlphaNumeric($input) {
+            return preg_match("/^[a-zA-Z0-9 ]+$/", $input);
+        }
+        private function isValidStringWithSpaces($input) {
+            return preg_match("/^[a-zA-Z ]+$/", $input);
+        }
+        function isValidTextOnly($input) {
+            return preg_match("/^[a-zA-Z]+$/", $input);
+        }
+        private function validateUnique($table, $column, $value) {
+            $db=new DBQuery();
+            $isExist =$db->setTable($table)->where($column, $value)->first();
+            if(!empty($isExist->id)){
+                return false;
+            }
+            return true;
+        }
     }
 ?>
