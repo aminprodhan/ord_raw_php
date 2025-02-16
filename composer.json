@@ -9,7 +9,8 @@
             "includes"
         ],
         "psr-4": {
-            "Amin\\Arraytics\\": "app/"
+            "Amin\\Arraytics\\": "app/",
+            "Amin\\ArrayticsLib\\": "lib/"
         }
     },
     "authors": [

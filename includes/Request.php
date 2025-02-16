@@ -26,11 +26,14 @@
                     
             }
             if($this->inputs){
-                $this->inputs->_method = $method;
-                $this->inputs->url = $url;
+                //$this->inputs->_method = $method;
+                //$this->inputs->url = $url;
             }
-            $this->current_url=$url;
+            //$this->current_url=$url;
             SessionManagement::setUserRequestSession($this);
+        }
+        public function all(){
+            return $this->inputs;
         }
         public function __get($name){
             return is_string($this->inputs->$name ?? null) ? strip_tags($this->inputs->$name) : ($this->inputs->$name ?? '');
@@ -110,6 +113,16 @@
                 return false;
             }
             return true;
+        }
+        public function getVisitorIP() {
+            if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+                $ip = $_SERVER['HTTP_CLIENT_IP'];
+            } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+                $ip = explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'])[0]; // Get the first IP
+            } else {
+                $ip = $_SERVER['REMOTE_ADDR'];
+            }
+            return $ip;
         }
     }
 ?>

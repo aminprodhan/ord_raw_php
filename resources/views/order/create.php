@@ -101,6 +101,8 @@ startSection('scripts');
             const baseUrl = "<?php echo baseUrl('order/store'); ?>";
             console.log(baseUrl);
             $(document).ready(function() {
+                console.log(document.cookie);
+                
                 $('#add_item').on('click', function() {
                     addItem();
                 });

@@ -2,15 +2,11 @@
     class ApplicationBootstrap {
         private static $instance;
         private function __construct(){
-            //$this->defineConstants();
             $this->includeClasses();
         }
-        // private function defineConstants(){
-        //     if(defined('ABSPATH')) return;
-        //     define('ABSPATH', __DIR__.'/..//');
-        // }
         private function includeClasses(){
             LoadEnv::load(ABSPATH.'.env');
+            date_default_timezone_set(getenv('APP_TIMEZONE'));
             require_once ABSPATH.'routes/web.php';            
         }
         public static function getInstance(){

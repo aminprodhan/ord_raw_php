@@ -1,10 +1,17 @@
 <?php 
 namespace Amin\Arraytics\Controller;
+
+use Amin\Arraytics\Repository\OrderRepository;
+use Request;
 class OrderController extends BaseController{
-    public function index(){
+    private $orderRepository;
+    public function __construct(){
+        $this->orderRepository=new OrderRepository();
+    }
+    public function create(){
         $this->loadView('order/create');
     }
-    public function store(\Request $request){
+    public function store(Request $request){
         $request->validate([
             'receipt_id' => 'required|text_only|max:20', //only text
             'buyer_name' => 'required|max:20|alpha_num', //text,space,number
@@ -15,6 +22,12 @@ class OrderController extends BaseController{
             'phone' => 'required|number|equal:13',
             'amount' => 'required|number|max:10',
             'items' => 'required|array',
+            'qty' => 'required|array',
+            'rate' => 'required|array',
         ]);
+        $this->orderRepository->createOrder($request,(array)$request->all());
+    }
+    public function index(Request $request){
+        $orders=$this->orderRepository->getOrders();
     }
 }

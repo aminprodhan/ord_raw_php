@@ -1,6 +1,26 @@
 <?php
 class JsonResponse
 {
+    //send with cookie
+    public static function sendWithCookie(int $statusCode = 200, array $data = []){
+        // Set the Content-Type to application/json
+        header('Content-Type: application/json');
+        setcookie(
+            $data['cookie_name'],
+            $data['cookie_value'], 
+            $data['cookie_expire'], 
+            $data['cookie_path'], 
+            $data['cookie_domain'], 
+            $data['cookie_secure'],
+            $data['cookie_httponly']
+        );
+        // Set the HTTP status code
+        http_response_code($statusCode);
+        // Send the JSON-encoded response
+        echo json_encode($data['data'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        // Exit to prevent further output
+        exit;
+    }
     /**
      * Send a JSON response.
      *
