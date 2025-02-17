@@ -27,7 +27,8 @@ function yieldSection(string $name) {
     global $sections;
     echo $sections[$name] ?? '';  // Default to empty if not defined
 }
-function extendLayout($layout) {
+function extendLayout($layout, $data=[]) {
+    extract($data);
     include ABSPATH.'resources/views/'.$layout.'.php';
 }
 function asset($path) {

@@ -1,5 +1,4 @@
 <?php
-$title = "Home";
 startSection('content');
     ?>
         <div class="d-flex alert alert-primary" role="alert">
@@ -223,6 +222,7 @@ startSection('scripts');
                                 $('#btn_submit_text').text('Submit');
                                 $('#btn_submit').prop('disabled', false);
                                 if(response.status == 'success') {
+                                    alert(response.message);
                                     $('#order_form').trigger('reset');
                                     $('#items').empty();
                                     $('#total').text(0); 
@@ -273,4 +273,4 @@ startSection('scripts');
         </script>
     <?php
 endSection();
-extendLayout('layouts/master');
+extendLayout('layouts/master',['title' => 'Create Order']);

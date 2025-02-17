@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Home Page</title>
+    <title><?php echo $title ?? ''; ?></title>
     <link rel="stylesheet" href="<?=asset('assets/css/bootstrap.min.css') ?>">
     <link rel="stylesheet" href="<?=asset('assets/css/bootstrap-icons.css') ?>">
 </head>

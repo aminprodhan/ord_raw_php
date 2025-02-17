@@ -15,6 +15,15 @@ startSection('content');
                 </a>
             </div>
         </div>
+        <?php 
+            if($error=hasError()){
+                ?>
+                    <div class="alert alert-danger" role="alert">
+                        <?php echo $error; ?>
+                    </div>
+                <?php
+            }
+        ?>
         <div class="table-responsive">
             <table class="table table-hover">
                 <thead>
@@ -72,4 +81,4 @@ startSection('content');
         </div>
     <?php                
 endSection();
-extendLayout('layouts/master');
+extendLayout('layouts/master',['title' => $title]);
