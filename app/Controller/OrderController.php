@@ -28,6 +28,7 @@ class OrderController extends BaseController{
         $this->orderRepository->createOrder($request,(array)$request->all());
     }
     public function index(Request $request){
-        $orders=$this->orderRepository->getOrders();
+        $orders=$this->orderRepository->getOrders($request);
+        $this->loadView('order/list',compact('orders'));
     }
 }

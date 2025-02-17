@@ -43,51 +43,51 @@
                 $rules_exp = explode('|', $rule_params);
                 foreach($rules_exp as $rule){
                     if($rule == 'required' && empty($this->inputs->$field)){
-                        $this->errors[] = $field . ' is required';
+                        $this->errors[$field] = $field . ' is required';
                     }
                     if($rule == 'array' && !is_array($this->inputs->$field)){
-                        $this->errors[] = $field . ' must be an array';
+                        $this->errors[$field] = $field . ' must be an array';
                     }
                     if($rule == 'number'){
                         if(!is_numeric($this->inputs->$field)){
-                            $this->errors[] = $field . ' must be numeric';
+                            $this->errors[$field] = $field . ' must be numeric';
                         }
                     }
                     if(!empty($this->inputs->$field) &&  str_starts_with($rule, 'max:')){
                         $length = str_replace('max:', '', $rule);
                         if(strlen($this->inputs->$field) > $length){                
-                            $this->errors[] = $field . ' must be less than ' . $length . ' characters';
+                            $this->errors[$field] = $field . ' must be less than ' . $length . ' characters';
                         }
                     }
                     if(!empty($this->inputs->$field) &&  str_starts_with($rule, 'min:')){
                         $length = str_replace('min:', '', $rule);
                         if(strlen($this->inputs->$field) < $length){                
-                            $this->errors[] = $field . ' must be greater than ' . $length . ' characters';
+                            $this->errors[$field] = $field . ' must be greater than ' . $length . ' characters';
                         }
                     }
                     if(!empty($this->inputs->$field) &&  str_starts_with($rule, 'equal:')){
                         $length = str_replace('equal:', '', $rule);
                         if(strlen($this->inputs->$field) != $length){                
-                            $this->errors[] = $field . ' must be equal to ' . $length . ' characters';
+                            $this->errors[$field] = $field . ' must be equal to ' . $length . ' characters';
                         }
                     }
                     if($rule == 'alpha_num' && !empty($this->inputs->$field) && !$this->isValidAlphaNumeric($this->inputs->$field)){
-                        $this->errors[] = $field . ' must be alpha numeric';
+                        $this->errors[$field] = $field . ' must be alpha numeric';
                     }
                     if($rule == 'alpha' && !empty($this->inputs->$field) && !$this->isValidStringWithSpaces($this->inputs->$field)){
-                        $this->errors[] = $field . ' must be alpha';
+                        $this->errors[$field] = $field . ' must be alpha';
                     }
                     if($rule == 'text_only' && !empty($this->inputs->$field) && !$this->isValidTextOnly($this->inputs->$field)){
-                        $this->errors[] = $field . ' must be text only';
+                        $this->errors[$field] = $field . ' must be text only';
                     }
                     if($rule == 'email' && !empty($this->inputs->$field) && !filter_var($this->inputs->$field, FILTER_VALIDATE_EMAIL)){
-                        $this->errors[] = $this->$field . ' is not valid email';
+                        $this->errors[$field] = $this->$field . ' is not valid email';
                     }
                     if( !empty($this->inputs->$field) &&  str_starts_with($rule, 'unique:')){
                         [$table, $column] = explode(',', $rule);
                         $table = str_replace('unique:', '', $table);
                         if (!$this->validateUnique($table, $column, $this->inputs->$field)) {
-                            $this->errors[] = "{$field} must be unique.";
+                            $this->errors[$field] = "{$field} must be unique.";
                         }
                     }
                 }

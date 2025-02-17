@@ -34,6 +34,21 @@
                 }
             });
         }
+        function isValidAlphaNumeric(input) {
+            return /^[a-zA-Z0-9 ]+$/.test(input);
+        }
+        // Validate only letters with spaces
+        function isValidStringWithSpaces(input) {
+            return /^[a-zA-Z ]+$/.test(input);
+        }
+        // Validate only letters (no spaces)
+        function isValidTextOnly(input) {
+            return /^[a-zA-Z]+$/.test(input);
+        }
+        function isValidEmail(input) {
+            var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailPattern.test(input);
+        }
     </script>
 </body>
 </html>

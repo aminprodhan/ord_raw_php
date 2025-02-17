@@ -38,8 +38,8 @@
             return $lastId;
         }
         public function where($condi, $param = null, $param2 = null) {
-            if(is_callable($condi)){
-                    $condi($this);
+            if(is_callable($condi) && $condi != 'date'){
+                $condi($this);
             }
             else{
                 $this->handleWhere('condi', $condi, $param, $param2);
@@ -74,8 +74,19 @@
                 $this->condi_values[] = $param;
             }
         }
+        public function orderBy($col, $val="asc") {
+            if(is_array($col)) {
+                foreach ($col as $key => $value) {
+                    $this->orderBy[] = " {$key} {$value}";
+                }
+                return $this;
+            }
+            $this->orderBy[] = " {$col} {$val}";
+            return $this;
+        }
         public function get() {
             $sql = "SELECT {$this->select_columns} FROM {$this->table} {$this->getCond()}";
+            //echo $sql;
             $stmt = self::getConnection()->prepare($sql);
             $stmt->execute($this->condi_values);
             $data=$stmt->fetchAll(\PDO::FETCH_OBJ);
@@ -95,7 +106,7 @@
             }
             if(count($this->orderBy)>0)
                 $orderBy=" ORDER BY ".implode(",", $this->orderBy);
-            return " WHERE 1 {$where} {$whereBetween} {$where_or} and deleted_at is null {$orderBy}";
+            return " WHERE 1 {$where} {$whereBetween} {$where_or} {$orderBy}";
         }
 }
     

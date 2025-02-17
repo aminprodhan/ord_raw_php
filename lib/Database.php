@@ -5,7 +5,7 @@
         protected static $conn = null;
         private function __construct($class=null){
             try {
-                $dsn = "mysql:host=".getenv('DB_HOST').";dbname=".getenv('DB_DATABASE').";charset=UTF8";
+                $dsn = "mysql:host=".getenv('DB_HOST').";dbname=".getenv('DB_DATABASE').";charset=utf8mb4";
                 $options = [\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION];
 	            self::$conn = new \PDO($dsn, getenv('DB_USERNAME'), getenv('DB_PASSWORD'), $options);
                 self::$conn->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false);

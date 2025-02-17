@@ -1,19 +1,22 @@
 <?php
 namespace Amin\Arraytics\Repository;
 use Amin\Arraytics\Models\Order;
+use Request;
 class OrderRepository implements OrderRepositoryInterface{
     private $orderModel;
     public function __construct(){
         $this->orderModel=new Order();
     }
-    public function createOrder(\Request $request,array $data){
+    public function createOrder(Request $request,array $data){
        
         if (isset($_COOKIE['order_submission_lock'])) {
             $response = [
                 "status" => "error",
                 "message" => "You have already submitted. Please try again after 24 hours."
             ];
-            return \JsonResponse::send(409, $response);
+            return \JsonResponse::error('Invalid Amount', 409,[
+                "form_error" => "You have already submitted. Please try again after 24 hours.",
+            ]);
         }
 
        $calculateTotal=0;
@@ -21,7 +24,7 @@ class OrderRepository implements OrderRepositoryInterface{
            $calculateTotal+=$data['qty'][$index]*$data['rate'][$index];
         }
         if($calculateTotal!=$data['amount']){
-            return \JsonResponse::error('Invalid Amount', 400);
+            return \JsonResponse::error('Invalid Amount', 400,['amount'=> 'Invalid Amount']);
         }
         try{
             $items=implode(',', $data['items']);
@@ -61,8 +64,25 @@ class OrderRepository implements OrderRepositoryInterface{
             return \JsonResponse::error($e->getMessage(), 400);
         } 
     }
-    public function getOrders(){
-        setcookie("order_submission_lock", "", time() - 3600, "/");
-        echo 1;
+    public function getOrders(Request $request){
+        try{
+            return $this->orderModel->where(function($query) use ($request) {
+                if($request->start_date){
+                    $query->where("entry_at",">=",date('Y-m-d',strtotime($request->start_date)));
+                }
+                if(($request->end_date))
+                    $query->where("entry_at","<=",date('Y-m-d',strtotime($request->end_date)));
+                if(($request->entry_by))
+                    $query->where("entry_by",$request->entry_by);    
+            })
+            ->orderBy('id','desc')
+            ->get();
+        }
+        catch(\Exception $error){
+            setError($error->getMessage());
+            return [];
+        }
+        
+        
     }
 }
