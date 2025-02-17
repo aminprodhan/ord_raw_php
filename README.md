@@ -39,4 +39,4 @@ DB_PASSWORD=
 APP_TIMEZONE=Asia/Dhaka
 
 - test link
-- https://event.api.infoagebd.com/api/v1/event-details/next-js-for-react-and-fullstack-developers
+- https://test.ord.infoagectg.com
