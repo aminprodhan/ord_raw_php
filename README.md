@@ -16,7 +16,7 @@ Ensure you have the following installed on your system:
 - Apache/Nginx
 - MySQL Database
 
-### Backend Setup (Laravel)
+### Backend Setup
 
 ```sh
 # Clone the repository
